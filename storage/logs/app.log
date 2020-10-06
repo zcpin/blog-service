@@ -1,0 +1,9 @@
+2020/10/04 23:32:42 {"callers":["D:/gocode/src/github.com/zcpin/blog-service/main.go: 45 main.init.0"],"level":"debug","message":"wlsc  blog-service","time":1601825562390888600}
+2020/10/05 09:56:49 {"callers":["D:/gocode/src/github.com/zcpin/blog-service/main.go: 45 main.init.0"],"level":"debug","message":"wlsc  blog-service","time":1601863009297911700}
+2020/10/05 10:22:53 {"callers":["D:/gocode/src/github.com/zcpin/blog-service/main.go: 45 main.init.0"],"level":"debug","message":"wlsc  blog-service","time":1601864573316452000}
+2020/10/05 19:40:18 {"callers":["D:/gocode/src/github.com/zcpin/blog-service/main.go: 48 main.init.0"],"level":"error","message":"app.BindAndValid err ","time":1601898018401919000}
+2020/10/05 19:41:55 {"callers":["D:/gocode/src/github.com/zcpin/blog-service/main.go: 48 main.init.0"],"level":"error","message":"app.BindAndValid err ","time":1601898115140501800}
+2020/10/05 20:03:17 {"callers":["D:/gocode/src/github.com/zcpin/blog-service/main.go: 48 main.init.0"],"level":"error","message":"app.BindAndValid err ","time":1601899397985964200}
+2020/10/05 20:05:22 {"callers":["D:/gocode/src/github.com/zcpin/blog-service/main.go: 48 main.init.0"],"level":"error","message":"app.BindAndValid err ","time":1601899522995392500}
+2020/10/05 20:09:11 {"callers":["D:/gocode/src/github.com/zcpin/blog-service/main.go: 48 main.init.0"],"level":"error","message":"app.BindAndValid err State必须是[0 1]中的一个","time":1601899751549067100}
+2020/10/05 20:11:51 {"callers":["D:/gocode/src/github.com/zcpin/blog-service/main.go: 48 main.init.0"],"level":"error","message":"app.BindAndValid err State必须是[0 1]中的一个","time":1601899911760197700}
