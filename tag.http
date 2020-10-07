@@ -1,0 +1,22 @@
+DELETE http://localhost:8000/api/v1/tags/3
+Content-Type: application/x-www-form-urlencoded
+
+
+### 更新标签
+PUT http://localhost:8000/api/v1/tags/1
+Content-Type: application/x-www-form-urlencoded
+
+name=Go&modified_by=pin&state=1
+
+### 获取标签列表
+GET http://localhost:8000/api/v1/tags?state=1
+Accept: application/json
+
+### 添加标签
+POST http://localhost:8000/api/v1/tags
+Content-Type: application/x-www-form-urlencoded
+
+name=Python&created_by=pin
+
+###
+
