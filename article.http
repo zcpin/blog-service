@@ -1,0 +1,28 @@
+### 根据文章ID获取一篇文章
+GET http://localhost:8000/api/v1/articles/1
+Accept: application/json
+
+### 删除文章
+DELETE http://localhost:8000/api/v1/articles/3
+Content-Type: application/x-www-form-urlencoded
+
+id=99&content=new-element
+
+### 更新文章
+PUT http://localhost:8000/api/v1/articles/2
+Content-Type: application/x-www-form-urlencoded
+
+tag_id=1&title=测试文章3&desc=修改后的修改后的修改后的&modified_by=wlsc
+
+### 添加文章
+POST http://localhost:8000/api/v1/articles
+Content-Type: application/x-www-form-urlencoded
+
+#tag_id=1&title=新增文章&desc=新增文章新增文章文章&cover_image_url=https://www.zpin.top&content=测试文章--测试文章--测试文章&state=1&created_by=wlsc
+tag_id=1&title=测试文章3&desc=测试文章测试文章文章2&cover_image_url=https://www.zpin.top&content=测试文章--测试文章--测试文章2&state=1&created_by=wlsc
+
+### 获取文章列表
+GET http://localhost:8000/api/v1/articles?tag_id=1
+Accept: application/json
+
+###

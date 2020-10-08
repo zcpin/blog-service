@@ -1,10 +1,37 @@
 definitions:
+  model.Article:
+    properties:
+      content:
+        type: string
+      cover_image_url:
+        type: string
+      created_by:
+        type: string
+      created_on:
+        type: integer
+      delete_on:
+        type: integer
+      desc:
+        type: string
+      id:
+        type: integer
+      is_delete:
+        type: integer
+      modified_by:
+        type: string
+      modified_on:
+        type: integer
+      state:
+        type: integer
+      title:
+        type: string
+    type: object
   model.Tag:
     properties:
-      create_by:
+      created_by:
         type: string
-      create_on:
-        type: string
+      created_on:
+        type: integer
       delete_on:
         type: integer
       id:
@@ -14,7 +41,7 @@ definitions:
       modified_by:
         type: string
       modified_on:
-        type: string
+        type: integer
       name:
         type: string
       state:
@@ -28,6 +55,196 @@ info:
   title: 博客系统
   version: "1.0"
 paths:
+  /api/v1/article/{id}:
+    delete:
+      parameters:
+      - description: 文章ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Article'
+      summary: 删除文章
+    put:
+      parameters:
+      - description: 文章ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 文章标题
+        in: body
+        maxLength: 100
+        minLength: 4
+        name: title
+        schema:
+          type: string
+      - description: 文章简介
+        in: body
+        maxLength: 255
+        minLength: 10
+        name: desc
+        schema:
+          type: string
+      - description: 文章内容
+        in: body
+        minLength: 10
+        name: content
+        schema:
+          type: string
+      - description: 封面图片链接
+        in: body
+        maxLength: 255
+        name: cover_image_url
+        schema:
+          type: string
+      - default: 1
+        description: 文章状态
+        enum:
+        - 0
+        - 1
+        in: body
+        name: state
+        schema:
+          type: integer
+      - description: 文章标签ID
+        in: body
+        name: tag_id
+        required: true
+        schema:
+          type: string
+      - description: 修改者
+        in: body
+        maxLength: 100
+        minLength: 3
+        name: modified_by
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Article'
+      summary: 更新文章
+  /api/v1/articles:
+    get:
+      parameters:
+      - description: 文章标签ID
+        in: query
+        name: tag_id
+        required: true
+        type: integer
+      - description: 文章状态
+        in: query
+        name: state
+        type: integer
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Article'
+      summary: 获取文章列表
+    post:
+      parameters:
+      - description: 文章标题
+        in: body
+        maxLength: 100
+        minLength: 4
+        name: title
+        required: true
+        schema:
+          type: string
+      - description: 文章简介
+        in: body
+        maxLength: 255
+        minLength: 10
+        name: desc
+        required: true
+        schema:
+          type: string
+      - description: 文章内容
+        in: body
+        minLength: 10
+        name: content
+        required: true
+        schema:
+          type: string
+      - description: 封面图片链接
+        in: body
+        maxLength: 255
+        name: cover_image_url
+        required: true
+        schema:
+          type: string
+      - default: 1
+        description: 文章状态
+        enum:
+        - 0
+        - 1
+        in: body
+        name: state
+        schema:
+          type: integer
+      - description: 创建者
+        in: body
+        minLength: 2
+        name: created_by
+        required: true
+        schema:
+          type: string
+      - description: 文章标签ID
+        in: body
+        name: tag_id
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Article'
+      summary: 添加文章
+  /api/v1/articles/{id}:
+    get:
+      parameters:
+      - description: 文章标签ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 文章状态
+        in: query
+        name: state
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Article'
+      summary: 根据指定ID获取文章
   /api/v1/tags:
     get:
       parameters:

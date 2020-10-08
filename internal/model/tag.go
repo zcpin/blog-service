@@ -2,7 +2,6 @@ package model
 
 import (
 	"github.com/jinzhu/gorm"
-	"log"
 )
 
 type Tag struct {
@@ -15,6 +14,14 @@ func (t Tag) TableName() string {
 	return "blog_tag"
 }
 
+func (t Tag) Get(db *gorm.DB) (Tag, error) {
+	var tag Tag
+	err := db.Where("id = ? AND state= ? AND is_delete = ?", t.ID, t.State, t.IsDelete).First(&tag).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return tag, err
+	}
+	return tag, nil
+}
 func (t Tag) Count(db *gorm.DB) (int, error) {
 	var count int
 	if t.Name != "" {
@@ -44,7 +51,6 @@ func (t Tag) List(db *gorm.DB, pageOffest, pageSize int) ([]*Tag, error) {
 }
 
 func (t Tag) Create(db *gorm.DB) error {
-	log.Printf("zcp:%+v", *(t.Model))
 	return db.Create(&t).Error
 }
 

@@ -5,6 +5,11 @@ import (
 	"github.com/zcpin/blog-service/pkg/app"
 )
 
+func (d *Dao) GetTag(tagID uint32, state uint8) (model.Tag, error) {
+	tag := model.Tag{State: state, Model: &model.Model{ID: tagID}}
+	return tag.Get(d.engine)
+}
+
 func (d *Dao) CountTag(name string, state uint8) (int, error) {
 	tag := model.Tag{Name: name, State: state}
 	return tag.Count(d.engine)
