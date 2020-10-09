@@ -170,3 +170,9 @@ func (l *Logger) Fatal(v ...interface{}) {
 func (l *Logger) Fatalf(format string, v ...interface{}) {
 	l.WithLevel(LevelFatal).Output(fmt.Sprintf(format, v...))
 }
+func (l *Logger) Panic(v ...interface{}) {
+	l.WithLevel(LevelPanic).Output(fmt.Sprint(v...))
+}
+func (l *Logger) Panicf(format string, v ...interface{}) {
+	l.WithLevel(LevelPanic).Output(fmt.Sprintf(format, v...))
+}

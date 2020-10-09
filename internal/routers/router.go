@@ -5,20 +5,42 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	_ "github.com/zcpin/blog-service/docs"
+	"github.com/zcpin/blog-service/global"
 	"github.com/zcpin/blog-service/internal/middleware"
+	"github.com/zcpin/blog-service/internal/routers/api"
 	v1 "github.com/zcpin/blog-service/internal/routers/api/v1"
+	"github.com/zcpin/blog-service/pkg/limiter"
+	"net/http"
+	"time"
 )
+
+var methodLimiters = limiter.NewMethodLimiter().AddBucket(limiter.LimiterBucketRule{
+	Key:          "/auth",
+	FillInterval: time.Second,
+	Capacity:     10,
+	Quantum:      10,
+})
 
 func NewRouter() *gin.Engine {
 	r := gin.New()
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
+	if global.ServerSetting.RunModel == "debug" {
+		r.Use(gin.Logger())
+		r.Use(gin.Recovery())
+	} else {
+		r.Use(middleware.AccessLog())
+		r.Use(middleware.Recovery())
+	}
+	r.Use(middleware.RateLimiter(methodLimiters))
+	r.Use(middleware.ContextTimeout(60 * time.Second))
 	r.Use(middleware.Translation())
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.GET("/auth", api.GetAuth)
+
 	article := v1.NewArticle()
 	tag := v1.NewTag()
 	apiv1 := r.Group("/api/v1")
+	apiv1.Use(middleware.JWT())
 	{
 		apiv1.POST("/tags", tag.Create)
 		apiv1.DELETE("/tags/:id", tag.Delete)
@@ -33,5 +55,11 @@ func NewRouter() *gin.Engine {
 		apiv1.GET("/articles/:id", article.Get)
 		apiv1.GET("/articles", article.List)
 	}
+
+	upload := api.NewUpload()
+	r.POST("/upload/file", upload.UploadFile)
+
+	r.StaticFS("/static", http.Dir(global.AppSetting.UploadSavePath))
+
 	return r
 }

@@ -11,6 +11,7 @@ name=Go&modified_by=pin&state=1
 ### 获取标签列表
 GET http://localhost:8000/api/v1/tags?state=1
 Accept: application/json
+token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfa2V5IjoiMmY0MzM2ZTY0OTIyMjllN2Y2NGM0YThjNGJjNTRjNWYiLCJhcHBfc2VjcmV0IjoiMWU4YTVhYjM0ZTczZjE2YzljNDViZmUzMDQwMTAzNzEiLCJleHAiOjE2MDIyNDM3NDksImlzcyI6ImJsb2ctc2VydmljZSJ9._CGd-fiE4UaqcGjqdGGv7X1-RLQ4vYNzXvBDlEFXloU
 
 ### 添加标签
 POST http://localhost:8000/api/v1/tags

@@ -1,0 +1,4 @@
+GET http://localhost:8000/auth?app_key=wlsc&app_secret=go-php-python-java
+Accept: application/json
+
+###
