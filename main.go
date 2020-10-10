@@ -1,15 +1,19 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/zcpin/blog-service/global"
 	"github.com/zcpin/blog-service/internal/model"
 	"github.com/zcpin/blog-service/internal/routers"
 	"github.com/zcpin/blog-service/pkg/logger"
 	"github.com/zcpin/blog-service/pkg/setting"
+	"github.com/zcpin/blog-service/pkg/tracer"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -18,6 +22,12 @@ import (
 // @description Go 博客系统
 // @termsOfService https://github.com/zcpin/blog-service
 func main() {
+	if isVersion {
+		fmt.Printf("build_time: %s\n", buildTime)
+		fmt.Printf("build_version: %s\n", buildVersion)
+		fmt.Printf("git_commit_id: %s\n", gitCommitID)
+		return
+	}
 	gin.SetMode(global.ServerSetting.RunModel)
 	router := routers.NewRouter()
 	serve := &http.Server{
@@ -33,9 +43,24 @@ func main() {
 	}
 }
 
-func init() {
+var (
+	port    string
+	runMode string
+	config  string
 
-	err := setupSetting()
+	isVersion    bool
+	buildTime    string
+	buildVersion string
+	gitCommitID  string
+)
+
+func init() {
+	err := setupFlag()
+	if err != nil {
+		log.Fatalf("init.setupFlag err: %v", err)
+	}
+
+	err = setupSetting()
 	if err != nil {
 		log.Fatalf("init.setupSetting err %v", err)
 	}
@@ -49,14 +74,20 @@ func init() {
 	if err != nil {
 		log.Fatalf("init.setupLogger err %v", err)
 	}
+
+	err = setupTracer()
+	if err != nil {
+		log.Fatalf("init.setupTracer err: %v", err)
+	}
 }
 
 func setupSetting() error {
-	settings, err := setting.NewSetting()
+	settings, err := setting.NewSetting(strings.Split(config, ",")...)
 
 	if err != nil {
 		return err
 	}
+
 	err = settings.ReadSection("Server", &global.ServerSetting)
 	if err != nil {
 		return err
@@ -82,6 +113,13 @@ func setupSetting() error {
 	if err != nil {
 		return err
 	}
+
+	if port != "" {
+		global.ServerSetting.HttpPort = port
+	}
+	if runMode != "" {
+		global.ServerSetting.RunModel = runMode
+	}
 	return nil
 }
 
@@ -102,5 +140,23 @@ func setupLogger() error {
 		MaxAge:    10,
 		LocalTime: true,
 	}, "", log.LstdFlags).WithCaller(2)
+	return nil
+}
+
+func setupTracer() error {
+	jaegerTracer, _, err := tracer.NewJaegerTracer("blog-service", "127.0.0.1:6831")
+	if err != nil {
+		return err
+	}
+	global.Tracer = jaegerTracer
+	return nil
+}
+
+func setupFlag() error {
+	flag.StringVar(&port, "port", "", "启动端口")
+	flag.StringVar(&runMode, "mode", "", "启动模式")
+	flag.StringVar(&config, "config", "configs/", "指定要使用的配置文件路径")
+	flag.BoolVar(&isVersion, "version", false, "编译信息")
+	flag.Parse()
 	return nil
 }
